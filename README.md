@@ -1,3 +1,4 @@
+[![DOI](https://zenodo.org/badge/11902/welcheb/Thermoesthesia_GUI.svg)](https://zenodo.org/badge/latestdoi/11902/welcheb/Thermoesthesia_GUI)
 
 THERMOESTHESIA_GUI
 ==================
@@ -98,7 +99,7 @@ THERMOESTHESIA_PLOT
 
 Description
 ===========
-Graphical user interface (GUI) to capture a human subject's perception and ability to distinguish differences of temperature (thermoesthesia). The tool uses a graphic analog scale (Figure 1) to implement a MATLAB-based GUI (Figure 2) in which the subject controls a marker on the scale. The subject also indicates shivering status with a box/ellipse with options "None", "Sporadic" or "Constant". 
+Graphical user interface (GUI) to capture a human subject's perception and ability to distinguish differences of temperature (thermoesthesia). The tool uses a graphic analog scale (Figure 1) to implement a MATLAB-based GUI (Figure 2) in which the subject controls a marker on the scale. The subject also indicates shivering status with a box/ellipse with options "None", "Sporadic" or "Constant".
 
 Figure 1. Thermoesthesia Scale
 ====================
