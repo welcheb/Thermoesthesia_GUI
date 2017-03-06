@@ -165,7 +165,7 @@ function csv_filename = tGUI(experiment_name_string, gui_params)
     fprintf(fid,'"s","level","shiver"\n');
     global marker_level shiver_level_now shiver_level_prev;
     marker_level = 50;
-    shiver_level_now = 0; % 0 == none, 1 == sporadic, 2 == constant
+    shiver_level_now = 0; % 0 == none, 1 == shiver
     shiver_level_prev = 0;
     fprintf(fid,'%.2f,%d,%d\n', toc, marker_level, shiver_level_now);
     fclose(fid); % close file after every write
@@ -207,11 +207,8 @@ function csv_filename = tGUI(experiment_name_string, gui_params)
     htxt_none = text(txt_x0 + 410, txt_y0, 'None');
     set(htxt_none, 'FontName', txt_fontname, 'FontSize', txt_fontsize, 'Color', txt_color);
 
-    htxt_sporadic = text(txt_x0 + 640, txt_y0, 'Sporadic');
+    htxt_sporadic = text(txt_x0 + 640, txt_y0, 'Shivering');
     set(htxt_sporadic, 'FontName', txt_fontname, 'FontSize', txt_fontsize, 'Color', txt_color);
-
-    htxt_constant = text(txt_x0 + 970, txt_y0, 'Constant');
-    set(htxt_constant, 'FontName', txt_fontname, 'FontSize', txt_fontsize, 'Color', txt_color);
 
     %% draw initial shiver_box
     shiver_box_facecolor = 'none';
@@ -269,15 +266,8 @@ function csv_filename = tGUI(experiment_name_string, gui_params)
                 if shiver_level_now==0,
                     shiver_level_now = 1;
                     shiver_level_prev = 0;
-                elseif shiver_level_now==2,
-                    shiver_level_now = 1;
-                    shiver_level_prev = 2;
-                else % changing from shiver_level == 1, need to detect dir.
-                    if shiver_level_prev == 0,
-                        shiver_level_now = 2;
-                    else
-                        shiver_level_now = 0;
-                    end
+                elseif shiver_level_now==1,
+                    shiver_level_now = 0;
                     shiver_level_prev = 1;
                 end
 
