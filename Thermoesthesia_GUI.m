@@ -1,5 +1,5 @@
 %
-% THERMOESTHESIA_GUI(EXPERIMENT_NAME_STRING)
+% tGUI(EXPERIMENT_NAME_STRING)
 %
 % Opens a Thermoesthesia GUI with figure title EXPERIMENT_NAME_STRING.
 %
@@ -19,15 +19,15 @@
 %
 % To start a new file, close the GUI and call again
 %
-% THERMOESTHESIA_GUI(EXPERIMENT_NAME_STRING)
+% tGUI(EXPERIMENT_NAME_STRING)
 %
 % Open GUI with custom parameter settings
 %
-% THERMOESTHESIA_GUI(EXPERIMENT_NAME_STRING, GUI_PARAMS)
+% tGUI(EXPERIMENT_NAME_STRING, GUI_PARAMS)
 %
 % Return the name of the CSV filename used to store Thermoesthesia values
 %
-% CSV_FILENAME = THERMOESTHESIA_GUI(EXPERIMENT_NAME_STRING)
+% CSV_FILENAME = tGUI(EXPERIMENT_NAME_STRING)
 %
 % GUI_PARAMS is a structure with the following fields and default values
 %
@@ -59,14 +59,16 @@
 %   hf555 = figure(555); set(hf555,'Color',[0 0 0],'menubar','none');
 %
 %   % open Thermoesthesia GUI with default settings
-%   Thermoesthesia_GUI('TEST');
+%   tGUI('TEST');
 %
 
 %
 % History
 % 2016.03.07 - welcheb - updated to version 0.1 for public posting
+% 2016.10.27 - coolbac - updated to version 0.2.0 changes include:
+%                      - shortened function name to tGUI
 %
-function csv_filename = Thermoesthesia_GUI(experiment_name_string, gui_params)
+function csv_filename = tGUI(experiment_name_string, gui_params)
 
 	%% Assign date_string and set tic
     date_string = datestr(now,'yyyymmdd_HHMMSS');
