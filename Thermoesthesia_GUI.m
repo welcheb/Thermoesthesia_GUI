@@ -67,6 +67,9 @@
 % 2016.03.07 - welcheb - updated to version 0.1 for public posting
 % 2016.10.27 - coolbac - updated to version 0.2.0 changes include:
 %                      - shortened function name to tGUI
+%                      - turn off shiver 'beep'
+%                      - removed shiver type indicator (switched to binary 
+%                      yes/no for shivering)
 %
 function csv_filename = tGUI(experiment_name_string, gui_params)
 
@@ -75,7 +78,7 @@ function csv_filename = tGUI(experiment_name_string, gui_params)
     tic;
 
     %% version string
-    version_str = 'v0.1';
+    version_str = 'v0.2.0';
 
     %% Detect/assign experiment_name_string
     if nargin<1 || length(experiment_name_string)<1,
