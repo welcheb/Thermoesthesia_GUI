@@ -150,9 +150,9 @@ function csv_filename = tGUI(experiment_name_string, gui_params)
     end
 
     %% beep_on
-    % flag to activate audible beep of shiver status (1, 2 or 3 beeps for 'none', 'sporadic' or 'constant')
+    % flag to activate audible beep of shiver status (1 or 2 beeps for 'none', 'shiver')
     if ~isfield(gui_params,'beep_on')
-        gui_params.beep_on = true;
+        gui_params.beep_on = false;
     end
 
     %% open file and enter first default marker position
