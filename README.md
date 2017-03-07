@@ -4,7 +4,7 @@ THERMOESTHESIA_GUI
 ==================
 ~~~~~
 %
-% THERMOESTHESIA_GUI(EXPERIMENT_NAME_STRING)
+% tGUI(EXPERIMENT_NAME_STRING)
 %
 % Opens a Thermoesthesia GUI with figure title EXPERIMENT_NAME_STRING.
 %
@@ -16,7 +16,7 @@ THERMOESTHESIA_GUI
 % CSV file has three columns:
 % 1. 's' : for seconds since GUI start (2 decimal places)
 % 2. 'level' : integer marker level (integers 0 to 100) ('very cold' to 'very hot')
-% 3. 'shiver' : shiver status (0=='none', 1=='sporadic', 2=='constant')
+% 3. 'shiver' : shiver status (0=='none', 1=='shiver')
 %
 % Only button up events are recorded into the CSV file.
 %
@@ -24,15 +24,15 @@ THERMOESTHESIA_GUI
 %
 % To start a new file, close the GUI and call again
 %
-% THERMOESTHESIA_GUI(EXPERIMENT_NAME_STRING)  
+% tGUI(EXPERIMENT_NAME_STRING)
 %
 % Open GUI with custom parameter settings
 %
-% THERMOESTHESIA_GUI(EXPERIMENT_NAME_STRING, GUI_PARAMS)
+% tGUI(EXPERIMENT_NAME_STRING, GUI_PARAMS)
 %
 % Return the name of the CSV filename used to store Thermoesthesia values
 %
-% CSV_FILENAME = THERMOESTHESIA_GUI(EXPERIMENT_NAME_STRING)
+% CSV_FILENAME = tGUI(EXPERIMENT_NAME_STRING)
 %
 % GUI_PARAMS is a structure with the following fields and default values
 %
@@ -46,7 +46,7 @@ THERMOESTHESIA_GUI
 % gui_params.keys_up = [ double('+48') 29 30];    % keys to mover marker up
 % gui_params.keys_shiver = [ double('- 56')];     % keys to change shiver status
 % gui_params.gui_timer_period_seconds = 30;   % seconds between auto logging to file
-% gui_params.beep_on = true;   % flag to activate audible beep of shiver status (1, 2 or 3 beeps for 'none', 'sporadic' or 'constant')
+% gui_params.beep_on = true;   % flag to activate audible beep of shiver status (1 or 2 beeps for 'none', 'shiver')
 %
 % Developed with MATLAB R2014b
 %
@@ -64,8 +64,7 @@ THERMOESTHESIA_GUI
 %   hf555 = figure(555); set(hf555,'Color',[0 0 0],'menubar','none');
 %
 %   % open Thermoesthesia GUI with default settings
-%   Thermoesthesia_GUI('TEST');
-%
+%   tGUI('TEST');
 ~~~~~
 
 THERMOESTHESIA_PLOT
@@ -99,7 +98,7 @@ THERMOESTHESIA_PLOT
 
 Description
 ===========
-Graphical user interface (GUI) to capture a human subject's perception and ability to distinguish differences of temperature (thermoesthesia). The tool uses a graphic analog scale (Figure 1) to implement a MATLAB-based GUI (Figure 2) in which the subject controls a marker on the scale. The subject also indicates shivering status with a box/ellipse with options "None", "Sporadic" or "Constant".
+Graphical user interface (GUI) to capture a human subject's perception and ability to distinguish differences of temperature (thermoesthesia). The tool uses a graphic analog scale (Figure 1) to implement a MATLAB-based GUI (Figure 2) in which the subject controls a marker on the scale. The subject also indicates shivering status with a box/ellipse with options "None" or "Shivering".
 
 Figure 1. Thermoesthesia Scale
 ====================
