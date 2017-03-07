@@ -78,7 +78,7 @@ function csv_filename = tGUI(experiment_name_string, gui_params)
     tic;
 
     %% version string
-    version_str = 'v0.2.0';
+    version_str = 'v0.2.1';
 
     %% Detect/assign experiment_name_string
     if nargin<1 || length(experiment_name_string)<1,
