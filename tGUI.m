@@ -11,7 +11,7 @@
 % CSV file has three columns:
 % 1. 's' : for seconds since GUI start (2 decimal places)
 % 2. 'level' : integer marker level (integers 0 to 100) ('very cold' to 'very hot')
-% 3. 'shiver' : shiver status (0=='none', 1=='sporadic', 2=='constant')
+% 3. 'shiver' : shiver status (0=='none', 1=='shiver')
 %
 % Only button up events are recorded into the CSV file.
 %
@@ -41,7 +41,7 @@
 % gui_params.keys_up = [ double('+48') 29 30];    % keys to mover marker up
 % gui_params.keys_shiver = [ double('- 56')];     % keys to change shiver status
 % gui_params.gui_timer_period_seconds = 30;   % seconds between auto logging to file
-% gui_params.beep_on = true;   % flag to activate audible beep of shiver status (1, 2 or 3 beeps for 'none', 'sporadic' or 'constant')
+% gui_params.beep_on = true;   % flag to activate audible beep of shiver status (1 or 2 beeps for 'none', 'shiver')
 %
 % Developed with MATLAB R2014b
 %
@@ -65,6 +65,16 @@
 %
 % History
 % 2016.03.07 - welcheb - updated to version 0.1 for public posting
+<<<<<<< HEAD:tGUI.m
+% 2016.10.27 - coolbac - updated to version 0.2.0 changes include:
+%                      - shortened function name to tGUI
+%                      - turn off shiver 'beep'
+%                      - removed shiver type indicator (switched to binary 
+%                      yes/no for shivering)
+% 2017.03.07 - coolbac - updated to version 0.2.1 changes include:
+%                      - saved function as tGUI.m 
+=======
+>>>>>>> origin/master:Thermoesthesia_GUI.m
 %
 function csv_filename = Thermoesthesia_GUI(experiment_name_string, gui_params)
 
@@ -73,7 +83,11 @@ function csv_filename = Thermoesthesia_GUI(experiment_name_string, gui_params)
     tic;
 
     %% version string
+<<<<<<< HEAD:tGUI.m
+    version_str = 'v0.2.1';
+=======
     version_str = 'v0.1';
+>>>>>>> origin/master:Thermoesthesia_GUI.m
 
     %% Detect/assign experiment_name_string
     if nargin<1 || length(experiment_name_string)<1,
