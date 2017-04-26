@@ -1,5 +1,5 @@
 %
-% THERMOESTHESIA_GUI(EXPERIMENT_NAME_STRING)
+% tGUI(EXPERIMENT_NAME_STRING)
 %
 % Opens a Thermoesthesia GUI with figure title EXPERIMENT_NAME_STRING.
 %
@@ -19,15 +19,15 @@
 %
 % To start a new file, close the GUI and call again
 %
-% THERMOESTHESIA_GUI(EXPERIMENT_NAME_STRING)
+% tGUI(EXPERIMENT_NAME_STRING)
 %
 % Open GUI with custom parameter settings
 %
-% THERMOESTHESIA_GUI(EXPERIMENT_NAME_STRING, GUI_PARAMS)
+% tGUI(EXPERIMENT_NAME_STRING, GUI_PARAMS)
 %
 % Return the name of the CSV filename used to store Thermoesthesia values
 %
-% CSV_FILENAME = THERMOESTHESIA_GUI(EXPERIMENT_NAME_STRING)
+% CSV_FILENAME = tGUI(EXPERIMENT_NAME_STRING)
 %
 % GUI_PARAMS is a structure with the following fields and default values
 %
@@ -50,7 +50,7 @@
 %
 % Usage notes:
 %
-% * Be sure to click Thermoesthesia GUI window with mouse after beginning
+% * Be sure to click tGUI window with mouse after beginning
 %   to record so that button events move marker and shiver status box.
 %
 % Example:
@@ -59,13 +59,12 @@
 %   hf555 = figure(555); set(hf555,'Color',[0 0 0],'menubar','none');
 %
 %   % open Thermoesthesia GUI with default settings
-%   Thermoesthesia_GUI('TEST');
+%   tGUI('TEST');
 %
 
 %
 % History
 % 2016.03.07 - welcheb - updated to version 0.1 for public posting
-<<<<<<< HEAD:tGUI.m
 % 2016.10.27 - coolbac - updated to version 0.2.0 changes include:
 %                      - shortened function name to tGUI
 %                      - turn off shiver 'beep'
@@ -73,21 +72,16 @@
 %                      yes/no for shivering)
 % 2017.03.07 - coolbac - updated to version 0.2.1 changes include:
 %                      - saved function as tGUI.m 
-=======
->>>>>>> origin/master:Thermoesthesia_GUI.m
+% 2017.04.25 - coolbac - corrected errors in version 0.2.1 that did not commit correctly on previous pull request
 %
-function csv_filename = Thermoesthesia_GUI(experiment_name_string, gui_params)
+function csv_filename = tGUI(experiment_name_string, gui_params)
 
 	%% Assign date_string and set tic
     date_string = datestr(now,'yyyymmdd_HHMMSS');
     tic;
 
     %% version string
-<<<<<<< HEAD:tGUI.m
     version_str = 'v0.2.1';
-=======
-    version_str = 'v0.1';
->>>>>>> origin/master:Thermoesthesia_GUI.m
 
     %% Detect/assign experiment_name_string
     if nargin<1 || length(experiment_name_string)<1,
@@ -162,9 +156,9 @@ function csv_filename = Thermoesthesia_GUI(experiment_name_string, gui_params)
     end
 
     %% beep_on
-    % flag to activate audible beep of shiver status (1, 2 or 3 beeps for 'none', 'sporadic' or 'constant')
+    % flag to activate audible beep of shiver status (1 or 2 'none', 'shiver')
     if ~isfield(gui_params,'beep_on')
-        gui_params.beep_on = true;
+        gui_params.beep_on = false;
     end
 
     %% open file and enter first default marker position
@@ -177,7 +171,7 @@ function csv_filename = Thermoesthesia_GUI(experiment_name_string, gui_params)
     fprintf(fid,'"s","level","shiver"\n');
     global marker_level shiver_level_now shiver_level_prev;
     marker_level = 50;
-    shiver_level_now = 0; % 0 == none, 1 == sporadic, 2 == constant
+    shiver_level_now = 0; % 0 == none, 1 == shiver
     shiver_level_prev = 0;
     fprintf(fid,'%.2f,%d,%d\n', toc, marker_level, shiver_level_now);
     fclose(fid); % close file after every write
@@ -219,11 +213,8 @@ function csv_filename = Thermoesthesia_GUI(experiment_name_string, gui_params)
     htxt_none = text(txt_x0 + 410, txt_y0, 'None');
     set(htxt_none, 'FontName', txt_fontname, 'FontSize', txt_fontsize, 'Color', txt_color);
 
-    htxt_sporadic = text(txt_x0 + 640, txt_y0, 'Sporadic');
+    htxt_sporadic = text(txt_x0 + 640, txt_y0, 'Shivering');
     set(htxt_sporadic, 'FontName', txt_fontname, 'FontSize', txt_fontsize, 'Color', txt_color);
-
-    htxt_constant = text(txt_x0 + 970, txt_y0, 'Constant');
-    set(htxt_constant, 'FontName', txt_fontname, 'FontSize', txt_fontsize, 'Color', txt_color);
 
     %% draw initial shiver_box
     shiver_box_facecolor = 'none';
@@ -281,15 +272,8 @@ function csv_filename = Thermoesthesia_GUI(experiment_name_string, gui_params)
                 if shiver_level_now==0,
                     shiver_level_now = 1;
                     shiver_level_prev = 0;
-                elseif shiver_level_now==2,
-                    shiver_level_now = 1;
-                    shiver_level_prev = 2;
-                else % changing from shiver_level == 1, need to detect dir.
-                    if shiver_level_prev == 0,
-                        shiver_level_now = 2;
-                    else
-                        shiver_level_now = 0;
-                    end
+                elseif shiver_level_now == 1,
+                    shiver_level_now = 0;
                     shiver_level_prev = 1;
                 end
 
