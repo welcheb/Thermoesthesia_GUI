@@ -1,33 +1,33 @@
 %
-% tGUI(EXPERIMENT_NAME_STRING)
+% tGUI;
 %
-% Opens a Thermoesthesia GUI (tGUI) with figure title EXPERIMENT_NAME_STRING.
+% Waits for the arduino to read thermoneutral before it opens a 
+% Thermoesthesia GUI (tGUI) with figure title EXPERIMENT_NAME_STRING.
 %
 % If EXPERIMENT_NAME_STRING is not provided or is empty, it is set to TEST
 %
 % Starts a CSV file with name EXPERIMENT_NAME_STRING_YYYYMMDD_HHMMSS.csv
 % in the ./recordings/ folder
 %
-% CSV file has three columns:
+% CSV file has six columns:
 % 1. 's' : for seconds since GUI start (2 decimal places)
 % 2. 'level' : integer marker level (integers 0 to 100) ('very cold' to 'very hot')
 % 3. 'shiver' : shiver status (0=='none', 1=='shiver')
+% 4. 'green' : temperature read by green sensor
+% 5. 'blue' : tempreature read by blue sensor
+% 6. 'delta t' : difference between green and blue temperature readings
 %
 % Only button up events are recorded into the CSV file.
 %
 % One button is available to study personnel to start/pause recording.
 %
-% To start a new file, close the GUI and call again
+% To start a new file, close the GUI and run again
 %
-% tGUI(EXPERIMENT_NAME_STRING)
-%
-% Open GUI with custom parameter settings
-%
-% tGUI(EXPERIMENT_NAME_STRING, GUI_PARAMS)
+% tGUI;
 %
 % Return the name of the CSV filename used to store Thermoesthesia values
 %
-% CSV_FILENAME = tGUI(EXPERIMENT_NAME_STRING)
+% CSV_FILENAME = tGUI()
 %
 % GUI_PARAMS is a structure with the following fields and default values
 %
@@ -43,7 +43,7 @@
 % gui_params.gui_timer_period_seconds = 30;   % seconds between auto logging to file
 % gui_params.beep_on = true;   % flag to activate audible beep of shiver status (1 or 2 beeps for 'none', 'shiver')
 %
-% Developed with MATLAB R2014b
+% Developed with MATLAB R2018a
 %
 % Supported by a grant from the National Institutes of Health (NIH), National
 % Institute of Diabetes and Digestive and Kidney Diseases (NIDDK) - R01DK105371
@@ -52,16 +52,16 @@
 %
 % * Be sure to click Thermoesthesia GUI window with mouse after beginning
 %   to record so that button events move marker and shiver status box.
+% 
+% * When prompted for file name, press Enter to set name to default.
 %
 % Example:
 %
-%   % open figure black background to make Thermoesthesia GUI clearly visible
-%   hf555 = figure(555); set(hf555,'Color',[0 0 0],'menubar','none');
-%
 %   % open Thermoesthesia GUI with default settings
-%   tGUI('TEST');
+%   tGUI;
+%   File name: 'TEST'
 %
-
+%
 %
 % History
 % 2016.03.07 - welcheb - updated to version 0.1 for public posting
@@ -74,7 +74,87 @@
 %                      - saved function as tGUI.m 
 % 2017.12.05 - coolbac - updated to version 0.2.2 changes include:
 %		       - corrected errors in version 0.2.1 that did not save during previous commit
-function csv_filename = tGUI(experiment_name_string, gui_params)
+% 2018.07.19 - joseferpaz - updated to version 1.0.0 changes include:
+%                         - compatibility with arduino temperature sensor
+%                         - temperature readings logged into csv file
+%                         - Waits for thermoneutral before running tGUI
+%                     
+%
+%% Initialize arduino
+
+clear all;
+global sensor1_analog sensor1_t sensor2_analog sensor2_t uno;
+global sensor1_port sensor2_port filename;
+
+uno  = arduino();
+  
+%Port for LED
+light_port = 'D3';
+  
+%Port for sensor 1 (Green)
+sensor1_port = 'A5';
+  
+%Port for sensor 2 (Blue)
+sensor2_port = 'A2';
+  
+% make sure LED is off when initialized
+writePWMDutyCycle(uno, light_port , 0);
+  
+%sensor1_data_t = zeros(1);
+%sensor2_data_t = zeros(1);
+%   Arrays for voltage readings from sensors
+%   sensor1_data_v = zeros(1);
+%   sensor2_data_v = zeros(1);
+
+%% Get file name
+filename = input('File name: ','s');
+
+if isempty(filename)
+    filename = '';
+end
+
+
+%% Read the temperature sensors
+
+stopcmd = 0;
+
+while stopcmd == 0  
+      
+    
+    % Get measurements from sensor 1 (green) and print to command window
+    sensor1_analog = readVoltage(uno, sensor1_port)*(1023/5);
+    sensor1_t = (sensor1_analog*(5.0*100.0))/1023.0;
+    fprintf('Output of Sensor 1 (Green) is:  %f degreesC \n', sensor1_t);
+    
+     % Grab measurements from sensor 2 (Blue) and print to command window
+    sensor2_analog = readVoltage(uno, sensor2_port)*(1023/5);
+    sensor2_t = (sensor2_analog*(5.0*100.0))/1023.0;
+    fprintf('Output of Sensor 2 (Blue) is:  %f degrees C \n', sensor2_t);
+
+    % Turn on the blue LED to indicate thermoneutral & launch tGUI function 
+    % when the sensors are within two degrees of each other
+    
+    if abs( sensor1_t - sensor2_t ) < 2
+      writePWMDutyCycle(uno, light_port , .1);
+      t_GUI(filename);
+      stopcmd = 1; 
+      
+    else
+       writePWMDutyCycle(uno, light_port , 0); 
+    end
+    
+    %Leave the LED on for 10 seconds
+    pause(10);
+    
+  %End while loop 
+end
+
+%turn LED off
+writePWMDutyCycle(uno, light_port , 0);
+
+
+%% tGUI fn
+function csv_filename = t_GUI(experiment_name_string, gui_params)
 
 	%% Assign date_string and set tic
     date_string = datestr(now,'yyyymmdd_HHMMSS');
@@ -161,6 +241,10 @@ function csv_filename = tGUI(experiment_name_string, gui_params)
         gui_params.beep_on = false;
     end
 
+     %% Access the temperature sensors
+    global sensor1_analog sensor1_t sensor2_analog sensor2_t uno;
+    global sensor1_port sensor2_port;
+    
     %% open file and enter first default marker position
     global csv_filename;
     csv_filename = sprintf('./recordings/%s_%s.csv', experiment_name_string, date_string);
@@ -168,12 +252,13 @@ function csv_filename = tGUI(experiment_name_string, gui_params)
     if fid<0,
         error('Cannot open %s', csv_filename);
     end
-    fprintf(fid,'"s","level","shiver"\n');
+    fprintf(fid,'"s","level","shiver","green","blue","delta t"\n');
     global marker_level shiver_level_now shiver_level_prev;
     marker_level = 50;
     shiver_level_now = 0; % 0 == none, 1 == shiver
     shiver_level_prev = 0;
-    fprintf(fid,'%.2f,%d,%d\n', toc, marker_level, shiver_level_now);
+    delta_t = 0;
+    fprintf(fid,'%.2f,%d,%d,%d,%d,%d\n', toc, marker_level, shiver_level_now,sensor1_t,sensor2_t,delta_t);
     fclose(fid); % close file after every write
 
     %% load Thermoesthesia_Visual_Analog_Scale image
@@ -193,7 +278,7 @@ function csv_filename = tGUI(experiment_name_string, gui_params)
         'Color',[1 1 1], ...
         'name', sprintf('Thermoesthesia GUI (%s) ::: %s', version_str, experiment_name_string),'numbertitle','off', ...
         'Position',[50,50,fig_w,fig_h]);
-
+    
     %% display image
     button_area_fraction = button_region_h / fig_h;
     hplot = subplot('Position',[0.0 button_area_fraction 1.0 1.0-button_area_fraction]);
@@ -332,7 +417,12 @@ function csv_filename = tGUI(experiment_name_string, gui_params)
             if fid<0,
                 error('Cannot open %s', csv_filename);
             end
-            fprintf(fid,'%.2f,%d,%d\n', toc, marker_level, shiver_level_now);
+            sensor1_analog = readVoltage(uno, sensor1_port)*(1023/5);
+            sensor1_t = (sensor1_analog*(5.0*100.0))/1023.0;
+            sensor2_analog = readVoltage(uno, sensor2_port)*(1023/5);
+            sensor2_t = (sensor2_analog*(5.0*100.0))/1023.0;
+            delta_t = abs(sensor1_t - sensor2_t);
+            fprintf(fid,'%.2f,%d,%d,%d,%d,%d\n', toc, marker_level, shiver_level_now,sensor1_t,sensor2_t,delta_t);
             fclose(fid); % close file after every write
         else
             disp('NOT RECORDING!!!');
@@ -380,7 +470,7 @@ function csv_filename = tGUI(experiment_name_string, gui_params)
 
     %% calculate position of shiver box
     function update_shiver_box_position
-        shiver_box_h = 80;
+        shiver_box_h = 80;77
         shiver_box_w = 305;
         shiver_box_y = 310;
         shiver_box_x = [1120 1400 1735];
