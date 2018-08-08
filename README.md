@@ -193,11 +193,11 @@ Figure 2. GUI Screenshot
 
 Figure 3. Arduino microcontroller
 ==============
-![Arduino Image](./png/ArduinoUno.png)
+![Arduino Image](./png/ArduinoUno.jpg)
 
 Figure 4. Arduino circuit diagram
 ==============
-![Arduino Image](./png/Arduino_diagram.png)
+![Arduino Circuit Diagram Image](./png/Arduino_diagram.jpg)
 
 Example Plots
 =============
