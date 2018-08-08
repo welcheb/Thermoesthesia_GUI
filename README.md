@@ -179,7 +179,6 @@ THERMOESTHESIA_PLOT
 Description
 ===========
 ***Version 0.#.#*** <br/>Graphical user interface (GUI) to capture a human subject's perception and ability to distinguish differences of temperature (thermoesthesia). The tool uses a graphic analog scale (Figure 1) to implement a MATLAB-based GUI (Figure 2) in which the subject controls a marker on the scale. The subject also indicates shivering status with a box/ellipse with options "None" or "Shivering".
-Graphical user interface (GUI) to capture a human subject's perception and ability to distinguish differences of temperature (thermoesthesia). The tool uses a graphic analog scale (Figure 1) to implement a MATLAB-based GUI (Figure 2) in which the subject controls a marker on the scale. The subject also indicates shivering status with a box/ellipse with options "None" or "Shivering".
 
 ***Version 1.#.#*** <br/>Integrates real-time feedback from two thermistors connected to an Arduino microcontroller (Figure 3) to determine if the subject is at thermoneutral, which is then used as input to start the graphical user interface developed in Version 0.#.#. For example, the thermistors can be attached to the middle finger and inner forearm of the subject. If the skin temperature of the two locations is approximately equal, then the subject is considered to be at thermoneutral. For more information about the Arduino/thermistor circuit diagram and parts list, please refer to Figure 4. 
 
