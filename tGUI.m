@@ -137,7 +137,7 @@ function csv_filename = tGUI(experiment_name_string, gui_params)
         % when the sensors are within two degrees of each other
 
         if abs( sensor1_t - sensor2_t ) < 2
-          writePWMDutyCycle(uno, light_port , .1);
+          writePWMDutyCycle(uno, light_port , 1);
           stopcmd = 1; 
 
         else
